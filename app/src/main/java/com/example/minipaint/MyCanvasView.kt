@@ -1,10 +1,7 @@
 package com.example.minipaint
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Path
+import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
@@ -50,6 +47,9 @@ class MyCanvasView(context: Context) : View(context) {
     private var currentX = 0f
     private var currentY = 0f
 
+    //variable called frame that holds a Rect object.
+    private lateinit var frame: Rect
+
     //Set sensitivity to low so performance is not impacted.
     private val touchTolerance = ViewConfiguration.get(context).scaledTouchSlop
 
@@ -67,6 +67,10 @@ class MyCanvasView(context: Context) : View(context) {
 
         extraCanvas.drawColor(backgroundColor)
 
+        // Calculate a rectangular frame around the picture.
+        val inset = 40
+        frame = Rect(inset, inset, width - inset, height - inset)
+
     }
 
     //Override onDraw() and draw the contents of the cached extraBitmap on the canvas associated with the view. The drawBitmap()
@@ -75,6 +79,9 @@ class MyCanvasView(context: Context) : View(context) {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.drawBitmap(extraBitmap, 0f, 0f, null) //Note: The 2D coordinate system used for drawing on a Canvas is in pixels, and the origin (0,0) is at the top left corner of the Canvas.
+
+        // Draw a frame around the canvas.
+        canvas.drawRect(frame, paint)
     }
 
     //Upon a new path being created
